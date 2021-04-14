@@ -1,0 +1,125 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+  <title>Login page</title>
+  <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+  <script src="/webjars/bootstrap/4.5.3/js/bootstrap.min.js"></script>
+  <link rel="stylesheet"
+        href="/webjars/bootstrap/4.5.3/css/bootstrap.min.css" />
+  <link rel="icon"
+        type="image/ico"
+        href="/favicon.ico" />
+
+<body>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+      </div>
+
+      <div class="col-sm">
+        <div class="jumbotron mt-4">
+          <h3>
+            You Can Register Here
+          </h3>
+          <form action="#"
+                th:action="@{''}"
+                th:object="${userRegistration}"
+                method="POST"
+                enctype="utf8">
+
+            <!-- spring adds csrf token that must be sent to protrect against csrf attacks. -->
+
+            <div th:if="${_csrf?.parameterName} and ${_csrf?.token}">
+              <input  type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            </div>
+
+            <div class="form-group">
+
+              <label for="firstName">First Name</label>
+              <input class="form-control" type="text" th:field="*{firstName}" id="firstName" placeholder="Enter Your First Name" required />
+              <!--    <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Name Error</p>-->
+
+              <div th:if="${#fields.hasErrors('firstName')}" >
+                <ul class="list-group">
+                  <li class="list-group-item list-group-item-warning" th:each="err : ${#fields.errors('firstName')}" th:text="${err}">Input is incorrect</li>
+                </ul>
+              </div>
+
+
+            </div>
+
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input class="form-control" type="text" th:field="*{lastName}" id="lastName" placeholder="Enter Your Last Name" required/>
+
+              <!--    <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Name Error</p>-->
+              <div th:if="${#fields.hasErrors('lastName')}" >
+                <ul class="list-group">
+                  <li class="list-group-item list-group-item-warning" th:each="err : ${#fields.errors('lastName')}" th:text="${err}">Input is incorrect</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="nickName">Nickname</label>
+              <input class="form-control" type="text" th:field="*{nickname}" id="nickName" placeholder="Enter Your Nickname" required/>
+              <!--    <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Name Error</p>-->
+              <div th:if="${#fields.hasErrors('nickname')}" >
+                <ul class="list-group">
+                  <li class="list-group-item list-group-item-warning" th:each="err : ${#fields.errors('nickname')}" th:text="${err}">Input is incorrect</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input class="form-control" type="email" th:field="*{email}" id="email" placeholder="Enter Your Email" required/>
+              <!--    <p  th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Name Error</p>-->
+
+              <div th:if="${#fields.hasErrors('email')}" >
+                <ul class="list-group">
+                  <li class="list-group-item list-group-item-warning" th:each="err : ${#fields.errors('email')}" th:text="${err}">Input is incorrect</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input class="form-control" type="password" th:field="*{password}" id="password" placeholder="Enter Your Password" required/>
+              <small id="emailHelp1" class="form-text text-muted">We'll never share your email with anyone else.</small>
+              <small id="emailHelp2" class="form-text text-muted">Your password needs to be between 8 to 16 characters.</small>
+              <!--    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name Error</p>-->
+              <div th:if="${#fields.hasErrors('password')}" >
+                <ul class="list-group">
+                  <li class="list-group-item list-group-item-warning" th:each="err : ${#fields.errors('password')}" th:text="${err}">Input is incorrect</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="matchingPassword">Confirm Password</label>
+              <input class="form-control" type="password" th:field="*{matchingPassword}" id="matchingPassword" placeholder="Enter Your Password Again" required/>
+              <!--    <p th:if="${#fields.hasErrors('matchingPassword')}"  th:errors="*{matchingPassword}">Name Error</p>-->
+              <div th:if="${#fields.hasErrors('matchingPassword')}" >
+                <ul class="list-group">
+                  <li class="list-group-item list-group-item-warning" th:each="err : ${#fields.errors('matchingPassword')}" th:text="${err}">Input is incorrect</li>
+                </ul>
+              </div>
+
+            </div>
+
+            <button class="btn btn-primary" type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-sm">
+      </div>
+    </div>
+  </div>
+
+
+</body>
+</html>

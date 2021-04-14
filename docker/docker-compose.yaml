@@ -1,0 +1,228 @@
+version: "3.8"
+# ===================================================================================================
+services:
+  #works. no issues
+  my_poeple_mysql:
+    image: mysql:5.7
+
+    ports:
+      - "3307:3307"
+
+    networks:
+      my_people_network:
+        ipv4_address: "172.31.0.31"
+
+    volumes:
+      - "./volumes/code_lab_mysql/var/lib/mysql:/var/lib/mysql"
+
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=my_people
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_TCP_PORT=3307
+
+  # #there are issues
+  # #Could not connect to address=(host=mysql)(port=3306)(type=master) : (conn=53) Access denied for user 'zipkin'@'zipkin.docker_default' (using password: NO)
+  # storage:
+  #   image: openzipkin/zipkin-mysql
+  #   container_name: mysql
+  #   # environment:
+  #   #   - MYSQL_TCP_PORT=3306
+  #   # environment:
+  #   #   - MYSQL_TCP_PORT: 3306
+  #     # - MYSQL_HOST: localhost
+
+  #   # Uncomment to expose the storage port for testing
+  ##   ports:
+  ##     - 3306:3306
+    ## environment:
+    ##   - MYSQL_HOST=localhost
+    ##   - MYSQL_TCP_PORT=3306
+    ##   - MYSQL_USER=zipkin
+    ##   - MYSQL_PASSWORD=
+
+  # # The zipkin process services the UI, and also exposes a POST endpoint that
+  # # instrumentation can send trace data to. Scribe is disabled by default.
+  # #works. no issues
+  # zipkin:
+  #   image: openzipkin/zipkin
+  #   container_name: zipkin
+  #   # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
+  #   environment:
+  #     - STORAGE_TYPE=mysql
+  #     # Point the zipkin at the storage backend
+  #     - MYSQL_HOST=mysql
+  #     # Uncomment to enable scribe
+  #     # - SCRIBE_ENABLED=true
+  #     # Uncomment to enable self-tracing
+  #     # - SELF_TRACING_ENABLED=true
+  #     # Uncomment to enable debug logging
+  #     - JAVA_OPTS=-Dlogging.level.zipkin2=DEBUG
+  #   ports:
+  #     # Port used for the Zipkin UI and HTTP Api
+  #     - 9411:9411
+  #     # Uncomment if you set SCRIBE_ENABLED=true
+  #     # - 9410:9410
+  #   depends_on:
+  #     - storage
+
+  # # Adds a cron to process spans since midnight every hour, and all spans each day
+  # # This data is served by http://192.168.99.100:8080/dependency
+  # #
+  # # For more details, see https://github.com/openzipkin/docker-zipkin-dependencies
+  # #works. no issues
+  # dependencies:
+  #   image: openzipkin/zipkin-dependencies
+  #   container_name: dependencies
+  #   entrypoint: crond -f
+  #   environment:
+  #     - STORAGE_TYPE=mysql
+  #     - MYSQL_HOST=mysql
+  #     # Add the baked-in username and password for the zipkin-mysql image
+  #     - MYSQL_USER=zipkin
+  #     - MYSQL_PASS=zipkin
+  #     # Uncomment to see dependency processing logs
+  #     # - ZIPKIN_LOG_LEVEL=DEBUG
+  #     # Uncomment to adjust memory used by the dependencies job
+  #     # - JAVA_OPTS=-verbose:gc -Xms1G -Xmx1G
+  #   depends_on:
+  #     - storage
+  # #works. no issues
+  # prometheus:
+  #   image: prom/prometheus
+  #   container_name: prometheus
+  #   ports:
+  #     - 9090:9090
+  #   depends_on:
+  #     - storage
+  #   volumes:
+  #     - "./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+  # #works. no issues
+  # grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   ports:
+  #     - 3002:3000
+  #   depends_on:
+  #     - prometheus
+  #   environment:
+  #     - GF_AUTH_ANONYMOUS_ENABLED=true
+  #     - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+  # #works. no issues
+  # setup_grafana_datasource:
+  #   image: appropriate/curl
+  #   container_name: setup_grafana_datasource
+  #   depends_on:
+  #     - grafana
+  #   volumes:
+  #     - ./prometheus/create-datasource-and-dashboard.sh:/create.sh:ro
+  #   command: /create.sh      
+# ===================================================================================================
+
+#    rabbitmq:
+#        image: rabbitmq:3-management-alpine
+#        container_name: rabbitmq
+#        volumes:
+#            - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
+#            - ./.docker/rabbitmq/data/:/var/lib/rabbitmq/
+#            - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/
+#        environment:
+#            RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+#            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+#            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+#        ports:
+#            - 5672:5672
+#            - 15672:15672
+# ===================================================================================================
+#  minio:
+#    image: 'bitnami/minio:latest'
+#    ports:
+#      - '9000:9000'
+#    environment:
+#      - MINIO_ACCESS_KEY=minio-access-key
+#      - MINIO_SECRET_KEY=minio-secret-key
+#    networks:
+#      - app-tier
+#  myapp:
+#    image: 'YOUR_APPLICATION_IMAGE'
+#    networks:
+#      - app-tier
+#    environment:
+#      - MINIO_SERVER_ACCESS_KEY=minio-access-key
+#      - MINIO_SERVER_SECRET_KEY=minio-secret-key
+# ===================================================================================================
+  #works. no issues
+  # mongodb_container:
+  #   image: mongo:latest
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: password
+  #   ports:
+  #     - 27017:27017
+  #   volumes:
+  #     - ./mongodb_data_container:/data/db
+
+  # postgresql:
+  #   image: postgres:latest
+  #   environment:
+  #     - POSTGRES_DB=postgres
+  #     - POSTGRES_USER=user
+  #     - POSTGRES_PASSWORD=password
+  #   ports:
+  #     - '5433:5432'
+  #   volumes:
+  #     - ./postgres_container:/var/lib/mysql
+  #works. no issues
+  # rabbitmq:
+  #   image: rabbitmq:3-management-alpine
+  #   container_name: rabbitmq
+  #   environment:
+  #     RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+  #     RABBITMQ_DEFAULT_USER: "rabbitmq"
+  #     RABBITMQ_DEFAULT_PASS: "rabbitmq"
+  #   volumes:
+  #       - ./rabbitmq_data_container/data/:/var/lib/rabbitmq/
+  #       - ./rabbitmq_data_container/logs/:/var/log/rabbitmq/
+  #   ports:
+  #       - 5672:5672
+  #       - 15672:15672
+
+  #works. no issues
+  # redis_master:
+  #   image: redis:3
+  #   ports:
+  #       - 6379:6379
+  #   volumes:
+  #     - "./redis_data_container_master/:/data"
+  #works. no issues
+  # redis_slave:
+  #   image: redis:3
+  #   ports:
+  #     - 6579:6579
+  #   depends_on:
+  #     - redis_master  
+  #   command: redis-server --slaveof redis-master 6379
+  #   links:
+  #     - master:redis-master
+  #   volumes:
+  #     - "./redis_data_container_slave/:/data"
+  #works. no issues
+  # redis_sentinel:
+  #   build: sentinel
+  #   environment:
+  #     - SENTINEL_DOWN_AFTER=5000
+  #     - SENTINEL_FAILOVER=5000
+  #   depends_on:
+  #     - redis_master
+  #     - redis_slave
+  #   links:
+  #     - redis_master:redis_master
+  #     - redis_slave    
+# ===================================================================================================
+networks:
+  my_people_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.31.0.0/16

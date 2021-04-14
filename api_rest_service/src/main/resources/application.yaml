@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: rest-api-service
+
+  sleuth:
+    sampler:
+      rate: 10
+
+  jackson: 
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+
+
+  liquibase:
+    enabled: false
+    change-log: classpath:/db/changelog/changelog-master.xml
+#  datasource:
+#    url: jdbc:h2:mem:testdb
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password: password
+#  jpa:
+#    database-platform: org.hibernate.dialect.H2Dialect
+#    database-platform: org.hibernate.dialect.MySQL57Dialect
+
+okta:
+  oauth2:
+    issuer: https://dev-6167481.okta.com/oauth2/default
+    client-id: ${OKTA_CLIENT_ID:BLANK}
+    client-secret: ${OKTA_TOKEN:BLANK}
+    scopes: openid, email, offline_access
+    redirect-uri: /login/oauth2/code/okta
+logging:
+  level:
+    root: debug
+
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 60m
+      cookie:
+        name: CLIENT_OAUTHSESSIONID
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+  instance:
+    instance-id: ${spring.application.name}-${random.uuid}
+    hostname: localhost
+
+front_end:
+  protocol: http
+  port: 3000
+  host: localhost
+  path: Overview
+

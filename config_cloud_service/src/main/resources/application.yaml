@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: conig-cloud-service
+
+server:
+  port: 8082
+
+#eureka:
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
+#
+#  instance:
+#    instance-id: ${spring.application.name}-${random.uuid}
+#    hostname: localhost
+eureka:
+  client:
+    region: default
+    fetch-registry: true
+    register-with-eureka: true
+    registryFetchIntervalSeconds: 5
+    service-url:
+      default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+  instance:
+    instance-id: ${spring.application.name}-${random.uuid}
+    hostname: ${vcap.application.uris[0]:localhost}
+    metadataMap:
+      instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${server.port}}}
+
+#zuul:
+#  routes:
+#    oauth:
+#      path: /oauth/**
+#      sensitiveHeaders:
+#      stripPrefix: false
+#      serviceId: authorisation-server
+#
+#    profile-service-chaining:
+#      sensitiveHeaders:
+#      stripPrefix: false
+#      path: /services/profiles
+#      serviceId: profile-service-chaining
+#
+#hystrix:
+#  command:
+#    profile-service-chaining:
+#  execution:
+#    isolation:
+#      strategy: THREAD
+#      thread:
+#        timeoutInMilliseconds: 95000
+#
+#profile-service-chaining:
+#  ribbon:
+#    ConnectTimeout: 60000
+#    ReadTimeout: 90000
+#    MaxTotalHttpConnections: 500
+#    MaxConnectionsPerHost: 100
+logging:
+  level:
+    root: debug

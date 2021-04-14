@@ -1,0 +1,10 @@
+buildscript {
+    apply from: "../build_scripts/logging_configs.gradle"
+}
+
+plugins {
+    id 'java'
+    id 'groovy'
+    id 'idea'
+	id 'java-gradle-plugin'
+}

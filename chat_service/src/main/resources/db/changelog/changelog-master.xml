@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+<!--  <include  file="/db/changelog/changes/user_registration_and_password_reset.mysql" />-->
+
+  <include  file="/db/changelog/changes/chatspace_service.changelog.xml" />
+  <include  file="/db/changelog/changes/chatspace_service.development_data.changelog.xml" context="development" />
+  <include  file="/db/changelog/changes/chatspace_service.integration_data.changelog.xml" context="integration" />
+  <include  file="/db/changelog/changes/chatspace_service.production_data.changelog.xml" context="production" />
+
+
+</databaseChangeLog>

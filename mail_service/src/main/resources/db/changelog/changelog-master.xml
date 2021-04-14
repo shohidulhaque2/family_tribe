@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <include  file="/db/changelog/changes/user_mailbox_service.changelog.xml" />
+  <include  file="/db/changelog/changes/user_mailbox_service.development_data.changelog.xml" context="development" />
+  <include  file="/db/changelog/changes/user_mailbox_service.integration_data.changelog.xml" context="integration" />
+  <include  file="/db/changelog/changes/user_mailbox_service.production_data.changelog.xml" context="production" />
+
+<!--  <include  file="/db/changelog/changes/user_profile_service.integration_data.mysql.sql" context="integrationTest" />-->
+<!--  <include  file="/db/changelog/changes/user_profile_service.integration_data.mysql.sql" context="stage" />-->
+<!--  <include  file="/db/changelog/changes/user_profile_service.integration_data.mysql.sql" context="production" />-->
+
+</databaseChangeLog>

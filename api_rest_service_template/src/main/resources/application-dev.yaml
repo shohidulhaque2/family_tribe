@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: api rest server
+  h2:
+    console:
+      enabled: true
+      path: /h2
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api_rest_server
+
+

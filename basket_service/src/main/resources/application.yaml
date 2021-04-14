@@ -1,0 +1,83 @@
+spring:
+  application:
+    name: user-registry-service
+
+  datasource:
+    #    url: jdbc:mysql://localhost:3306/user_registry_service
+    url: ${RDS_JDBC_URL:jdbc:mysql://localhost:3307/user_registration_service}
+    username: ${RDS_USER:user}
+    password: ${RDS_PASSWORD:password}
+    driver-class-name: com.mysql.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    show-sql: true
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+  #   should work, but there is some issue. that is why it is commented out.
+  #    properties:
+  #      hibernate:
+  #        dialect: org.hibernate.dialect.MySQL57Dialect
+
+  liquibase:
+    enabled: false
+    change-log: classpath:/db/changelog/changelog-master.xml
+    contexts: production
+
+  thymeleaf:
+    cache: false
+
+  sendgrid:
+    api-key: ${SEND_GRID_API_KEY:BLANK}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${JWK_SET_URI:https://dev-6167481.okta.com/oauth2/default/v1/keys}
+          issuer-uri: ${ISSUER_URI:https://dev-6167481.okta.com/oauth2/default}
+
+server:
+  port: 8081
+logging:
+  level:
+    root: debug
+
+account:
+  activation:
+    token:
+      validity:
+        time: 10
+
+email:
+  from: shohidul.haque@outlook.com
+  subject: Strong Links. This is your invitation to activate your account.
+  template:
+    id: ${SEND_GRID_EMAIL_TEMPLATE:BLANK}
+  verification:
+    endpoint:
+      scheme: http
+      host: ${server.address:localhost}
+      port: ${server.port:8080}
+      path: /user/activation
+#okta token
+authorizationserver:
+  openidconnect1:
+    client:
+      domain: ${OKTA_DOMAIN:dev-6167481.okta.com}
+      token: ${OKTA_TOKEN:BLANK}
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+  instance:
+    instance-id: ${spring.application.name}-${random.uuid}
+    hostname: localhost

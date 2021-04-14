@@ -1,0 +1,287 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+  <changeSet author="shohidul.haque@outlook.com" id="1">
+    <createTable tableName="ACL_CLASS">
+      <column autoIncrement="true" name="ID" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_PK_10206"/>
+      </column>
+      <column name="CLASS" type="VARCHAR(100)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="2">
+    <createTable tableName="ACL_ENTRY">
+      <column autoIncrement="true" name="ID" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_PK_10230"/>
+      </column>
+      <column name="ACL_OBJECT_IDENTITY" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ACE_ORDER" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="SID" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="MASK" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="GRANTING" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+      <column name="AUDIT_SUCCESS" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+      <column name="AUDIT_FAILURE" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="3">
+    <createTable tableName="ACL_OBJECT_IDENTITY">
+      <column autoIncrement="true" name="ID" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_PK_10213"/>
+      </column>
+      <column name="OBJECT_ID_CLASS" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="OBJECT_ID_IDENTITY" type="VARCHAR(36)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="PARENT_OBJECT" type="BIGINT"/>
+      <column name="OWNER_SID" type="BIGINT"/>
+      <column name="ENTRIES_INHERITING" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="4">
+    <createTable tableName="ACL_SID">
+      <column autoIncrement="true" name="ID" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_PK_10197"/>
+      </column>
+      <column name="PRINCIPAL" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+      <column name="SID" type="VARCHAR(100)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="5">
+    <createTable tableName="AUTHORITIES">
+      <column name="USERNAME" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="AUTHORITY" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="6">
+    <createTable tableName="GROUPS">
+      <column autoIncrement="true" name="ID" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_PK_10177"/>
+      </column>
+      <column name="GROUP_NAME" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="7">
+    <createTable tableName="GROUP_AUTHORITIES">
+      <column name="GROUP_ID" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="AUTHORITY" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="8">
+    <createTable tableName="GROUP_MEMBERS">
+      <column autoIncrement="true" name="ID" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_PK_10181"/>
+      </column>
+      <column name="USERNAME" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="GROUP_ID" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="9">
+    <createTable tableName="PERSISTENT_LOGINS">
+      <column name="USERNAME" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="SERIES" type="VARCHAR(64)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_PK_10170"/>
+      </column>
+      <column name="TOKEN" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="LAST_USED" type="TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="10">
+    <createTable tableName="USERS">
+      <column name="USERNAME" type="VARCHAR(50)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_PK_10155"/>
+      </column>
+      <column name="PASSWORD" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ENABLED" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="11">
+    <addUniqueConstraint columnNames="SID, PRINCIPAL" constraintName="UNIQUE_UK_1"
+      tableName="ACL_SID"/>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="12">
+    <addUniqueConstraint columnNames="CLASS" constraintName="UNIQUE_UK_2" tableName="ACL_CLASS"/>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="13">
+    <addUniqueConstraint columnNames="OBJECT_ID_CLASS, OBJECT_ID_IDENTITY"
+      constraintName="UNIQUE_UK_3" tableName="ACL_OBJECT_IDENTITY"/>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="14">
+    <addUniqueConstraint columnNames="ACL_OBJECT_IDENTITY, ACE_ORDER" constraintName="UNIQUE_UK_4"
+      tableName="ACL_ENTRY"/>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="15">
+    <createIndex indexName="IX_AUTH_USERNAME" tableName="AUTHORITIES" unique="true">
+      <column name="USERNAME"/>
+      <column name="AUTHORITY"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="16">
+    <createIndex indexName="SYS_IDX_FK_AUTHORITIES_USERS_10167" tableName="AUTHORITIES">
+      <column name="USERNAME"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="17">
+    <createIndex indexName="SYS_IDX_FK_GROUP_AUTHORITIES_GROUP_10194" tableName="GROUP_AUTHORITIES">
+      <column name="GROUP_ID"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="18">
+    <createIndex indexName="SYS_IDX_FK_GROUP_MEMBERS_GROUP_10187" tableName="GROUP_MEMBERS">
+      <column name="GROUP_ID"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="19">
+    <createIndex indexName="SYS_IDX_FOREIGN_FK_1_10223" tableName="ACL_OBJECT_IDENTITY">
+      <column name="PARENT_OBJECT"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="20">
+    <createIndex indexName="SYS_IDX_FOREIGN_FK_2_10225" tableName="ACL_OBJECT_IDENTITY">
+      <column name="OBJECT_ID_CLASS"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="21">
+    <createIndex indexName="SYS_IDX_FOREIGN_FK_3_10227" tableName="ACL_OBJECT_IDENTITY">
+      <column name="OWNER_SID"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="22">
+    <createIndex indexName="SYS_IDX_FOREIGN_FK_4_10248" tableName="ACL_ENTRY">
+      <column name="ACL_OBJECT_IDENTITY"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="23">
+    <createIndex indexName="SYS_IDX_FOREIGN_FK_5_10250" tableName="ACL_ENTRY">
+      <column name="SID"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="24">
+    <addForeignKeyConstraint baseColumnNames="USERNAME" baseTableName="AUTHORITIES"
+      constraintName="FK_AUTHORITIES_USERS" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="USERNAME"
+      referencedTableName="USERS" validate="true"/>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="25">
+    <addForeignKeyConstraint baseColumnNames="GROUP_ID" baseTableName="GROUP_AUTHORITIES"
+      constraintName="FK_GROUP_AUTHORITIES_GROUP" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID"
+      referencedTableName="GROUPS" validate="true"/>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="26">
+    <addForeignKeyConstraint baseColumnNames="GROUP_ID" baseTableName="GROUP_MEMBERS"
+      constraintName="FK_GROUP_MEMBERS_GROUP" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID"
+      referencedTableName="GROUPS" validate="true"/>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="27">
+    <addForeignKeyConstraint baseColumnNames="PARENT_OBJECT" baseTableName="ACL_OBJECT_IDENTITY"
+      constraintName="FOREIGN_FK_1" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID"
+      referencedTableName="ACL_OBJECT_IDENTITY" validate="true"/>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="28">
+    <addForeignKeyConstraint baseColumnNames="OBJECT_ID_CLASS" baseTableName="ACL_OBJECT_IDENTITY"
+      constraintName="FOREIGN_FK_2" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID"
+      referencedTableName="ACL_CLASS" validate="true"/>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="29">
+    <addForeignKeyConstraint baseColumnNames="OWNER_SID" baseTableName="ACL_OBJECT_IDENTITY"
+      constraintName="FOREIGN_FK_3" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID"
+      referencedTableName="ACL_SID" validate="true"/>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="30">
+    <addForeignKeyConstraint baseColumnNames="ACL_OBJECT_IDENTITY" baseTableName="ACL_ENTRY"
+      constraintName="FOREIGN_FK_4" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID"
+      referencedTableName="ACL_OBJECT_IDENTITY" validate="true"/>
+  </changeSet>
+
+  <changeSet author="shohidul.haque@outlook.com" id="31">
+    <addForeignKeyConstraint baseColumnNames="SID" baseTableName="ACL_ENTRY"
+      constraintName="FOREIGN_FK_5" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID"
+      referencedTableName="ACL_SID" validate="true"/>
+  </changeSet>
+
+</databaseChangeLog>

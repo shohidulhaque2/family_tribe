@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: eureka-discovery-service
+
+logging:
+  level:
+    root: debug
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+  environment: dev
+  datacenter: London
+
+server:
+  port: 8761

@@ -1,0 +1,1 @@
+select * from mailbox inner join mailbox_mail on mailbox.id = mailbox_mail.mailbox_id inner join mail on mail.id = mailbox_mail.mail_id;

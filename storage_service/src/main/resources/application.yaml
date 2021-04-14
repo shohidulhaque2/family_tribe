@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: storage-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/user_storage_service
+    username: user
+    password: password
+    driver-class-name: com.mysql.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    show-sql: true
+    generate-ddl: true
+#    database-platform: org.hibernate.dialect.MySQL57Dialect
+#   should work, but there is some issue. that is why it is commented out.
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL57Dialect
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/changelog-master.xml
+
+  thymeleaf:
+    cache: false
+
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://dev-6167481.okta.com/oauth2/default/v1/keys
+          issuer-uri: https://dev-6167481.okta.com/oauth2/default
+
+server:
+  port: 8085
+
+logging:
+  level:
+    root: debug
+
+#account:
+#  activation:
+#    token:
+#      validity:
+#        time: 10
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+  instance:
+    instance-id: ${spring.application.name}-${random.uuid}
+    hostname: localhost

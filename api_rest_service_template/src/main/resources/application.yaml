@@ -1,0 +1,169 @@
+#  https://reflectoring.io/spring-boot-profiles/
+server:
+  port: 8080
+#  servlet:
+#    context-path: /api_rest_server
+
+spring:
+  application:
+    name: api rest server
+  data:
+    rest:
+      base-path: /api
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+  #    database-platform: org.hibernate.dialect.H2
+  datasource:
+    #    platform: hsqldb
+    #    data: script-hsqldb.sql-hsqldb.sql
+    #    schema: schema-hsqldb.sql
+    data-username: sa
+    url: jdbc:h2:mem:testdb
+
+  #https://www.baeldung.com/liquibase-refactor-schema-of-java-app
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+---
+spring:
+  profiles: local_development
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2
+  datasource:
+    #    platform: hsqldb
+    #    data: script-hsqldb.sql-hsqldb.sql
+    #    schema: schema-hsqldb.sql
+    data-username: sa
+    url: jdbc:h2:mem:testdb
+---
+spring:
+  profiles: production
+  jpa:
+    hibernate:
+      ddl-auto:
+        - validate
+---
+spring:
+  profiles: unit_testing
+  jpa:
+    hibernate:
+      ddl-auto:
+        - validate
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2
+  datasource:
+    #    platform: hsqldb
+    #    data: script-hsqldb.sql-hsqldb.sql
+    #    schema: schema-hsqldb.sql
+    data-username: sa
+    url: jdbc:h2:mem:testdb
+---
+spring:
+  profiles: controller_layer_testing
+  jpa:
+    hibernate:
+      ddl-auto:
+        - validate
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2
+  datasource:
+    #    platform: hsqldb
+    #    data: script-hsqldb.sql-hsqldb.sql
+    #    schema: schema-hsqldb.sql
+    data-username: sa
+    url: jdbc:h2:mem:testdb
+---
+spring:
+  profiles: service_layer_testing
+  jpa:
+    hibernate:
+      ddl-auto:
+        - validate
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2
+  datasource:
+    #    platform: hsqldb
+    #    data: script-hsqldb.sql-hsqldb.sql
+    #    schema: schema-hsqldb.sql
+    data-username: sa
+    url: jdbc:h2:mem:testdb
+---
+spring:
+  profiles: persistence_layer_testing
+  jpa:
+    hibernate:
+      ddl-auto:
+        - validate
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2
+  datasource:
+    #    platform: hsqldb
+    #    data: script-hsqldb.sql-hsqldb.sql
+    #    schema: schema-hsqldb.sql
+    data-username: sa
+    url: jdbc:h2:mem:testdb
+---
+spring:
+  profiles: integration_testing
+  jpa:
+    hibernate:
+      ddl-auto:
+        - validate
+        -
+  datasource:
+    #    platform: hsqldb
+    #    data: script-hsqldb.sql-hsqldb.sql
+    #    schema: schema-hsqldb.sql
+    data-username: sa
+    url: jdbc:h2:mem:testdb
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+---
+spring:
+  profiles: web_layer_testing
+  jpa:
+    hibernate:
+      ddl-auto:
+        - validate
+        -
+  datasource:
+    #    platform: hsqldb
+    #    data: script-hsqldb.sql-hsqldb.sql
+    #    schema: schema-hsqldb.sql
+    data-username: sa
+    url: jdbc:h2:mem:testdb
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+---
+spring:
+  profiles: security_layer_testing
+  jpa:
+    hibernate:
+      ddl-auto:
+        - validate
+        -
+  datasource:
+    #    platform: hsqldb
+    #    data: script-hsqldb.sql-hsqldb.sql
+    #    schema: schema-hsqldb.sql
+    data-username: sa
+    url: jdbc:h2:mem:testdb
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.xml
