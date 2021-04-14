@@ -36,5 +36,5 @@ INSERT INTO chat_service.chat_space_user_chat_space (chat_space_user_id, chat_sp
 INSERT INTO chat_service.user_invitation(id, invited_user, uuid, creation_timestamp, expiration_timestamp, is_invitation_accepted, version, chat_space_id)
 values (1, '555593c2-d736-42ce-9926-ec944b02cbcc', '85f02cec-14e1-4fc8-8f64-f790fa8452bc', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), false, 1, 1);
 
-INSERT INTO chat_service.member (id, member_uuid, uuid, chat_space_id) VALUES (1, '555593c2-d736-42ce-9926-ec944b02cbcc', RANDOM_UUID(), 1);
+INSERT INTO chat_service.member (id, member_uuid, uuid, chat_space_id) VALUES (1, '555593c2-d736-42ce-9926-ec944b02cbcc', UUID(), 1);
 

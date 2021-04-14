@@ -114,36 +114,36 @@
     </createTable>
   </changeSet>
   <changeSet author="shohidul haque" id="8">
-    <createIndex indexName="FK_INDEX_member(chat_space_id)" tableName="member">
+    <createIndex indexName="FK_INDEX_member(chatspaceid)" tableName="member">
       <column name="chat_space_id"/>
     </createIndex>
   </changeSet>
   <changeSet author="shohidul haque" id="9">
-    <createIndex indexName="FK_INDEX_user_invitation(chat_space_id)" tableName="user_invitation">
+    <createIndex indexName="FK_INDEXuserinvitation(chatspaceid)" tableName="user_invitation">
       <column name="chat_space_id"/>
     </createIndex>
   </changeSet>
   <changeSet author="shohidul haque" id="10">
-    <createIndex indexName="FK_INDEX_chat_space_user_chat_space(chat_space_user_id)" tableName="chat_space_user_chat_space">
+    <createIndex indexName="FK_INDEXchatspaceuser_chatspace(chatspaceuserid)" tableName="chat_space_user_chat_space">
       <column name="chat_space_user_id"/>
     </createIndex>
   </changeSet>
   <changeSet author="shohidul haque" id="11">
-    <addForeignKeyConstraint baseColumnNames="chat_space_id" baseTableName="chat_space_user_chat_space" constraintName="FK_chat_space_user_chat_space(chat_space_id)_TO_chat_space(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="chat_space" validate="true"/>
+    <addForeignKeyConstraint baseColumnNames="chat_space_id" baseTableName="chat_space_user_chat_space" constraintName="FK_chatspaceuserchatspace(chatspaceid)TOchatspace(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="chat_space" validate="true"/>
   </changeSet>
   <changeSet author="shohidul haque" id="12">
-    <addForeignKeyConstraint baseColumnNames="chat_space_id" baseTableName="chat_space_messages" constraintName="FK_chat_space_messages(chat_space_messages)_TO_chat_space(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="chat_space" validate="true"/>
+    <addForeignKeyConstraint baseColumnNames="chat_space_id" baseTableName="chat_space_messages" constraintName="FK_chatspacemessages(chatspacemessages)TOchatspace(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="chat_space" validate="true"/>
   </changeSet>
   <changeSet author="shohidul haque" id="13">
-    <addForeignKeyConstraint baseColumnNames="chat_space_id" baseTableName="member" constraintName="FK_member(chat_space_id)_TO_chat_space(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="chat_space" validate="true"/>
+    <addForeignKeyConstraint baseColumnNames="chat_space_id" baseTableName="member" constraintName="FK_member(chatspaceid)TOchatspace(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="chat_space" validate="true"/>
   </changeSet>
   <changeSet author="shohidul haque" id="14">
-    <addForeignKeyConstraint baseColumnNames="chat_space_id" baseTableName="user_invitation" constraintName="FK_user_invitation(chat_space_id)_TO_chat_space(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="chat_space" validate="true"/>
+    <addForeignKeyConstraint baseColumnNames="chat_space_id" baseTableName="user_invitation" constraintName="FK_userinvitation(chatspaceid)TOchatspace(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="chat_space" validate="true"/>
   </changeSet>
   <changeSet author="shohidul haque" id="15">
-    <addForeignKeyConstraint baseColumnNames="messages_id" baseTableName="chat_space_messages" constraintName="FK_chat_space_messages(messages_id)_TO_message(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="message" validate="true"/>
+    <addForeignKeyConstraint baseColumnNames="messages_id" baseTableName="chat_space_messages" constraintName="FK_chatspacemessages(messagesid)TOmessage(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="message" validate="true"/>
   </changeSet>
   <changeSet author="shohidul haque" id="16">
-    <addForeignKeyConstraint baseColumnNames="chat_space_user_id" baseTableName="chat_space_user_chat_space" constraintName="FK_chat_space_user_chat_space(chat_space_user_id)_TO_chat_space_user(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="chat_space_user" validate="true"/>
+    <addForeignKeyConstraint baseColumnNames="chat_space_user_id" baseTableName="chat_space_user_chat_space" constraintName="FK_chatspace_userchatspace(chatspaceuserid)TOchatspaceuser(id)" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="chat_space_user" validate="true"/>
   </changeSet>
 </databaseChangeLog>

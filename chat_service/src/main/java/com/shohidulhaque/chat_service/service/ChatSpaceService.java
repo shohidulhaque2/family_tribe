@@ -13,6 +13,7 @@ import com.shohidulhaque.chat_service.mapper.MemberInvitationMapper;
 import com.shohidulhaque.chat_service.mapper.NewMessageMapper;
 import com.shohidulhaque.chat_service.repository.ChatSpaceRepository;
 import com.shohidulhaque.chat_service.repository.ChatSpaceUserRepository;
+import com.shohidulhaque.chat_service.repository.MessageRepository;
 import com.shohidulhaque.chat_service.repository.UserInvitationRepository;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceDtoRequest;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceDtoResponse;
@@ -66,6 +67,8 @@ public class ChatSpaceService {
     //==============================================================================================
     UserInvitationRepository userInvitationRepository;
     //==============================================================================================
+    MessageRepository messageRepository;
+    //==============================================================================================
     Clock clock;
     //==============================================================================================
     Validator javaxValidator;
@@ -90,6 +93,7 @@ public class ChatSpaceService {
         ChatSpaceDataModelToChatSpaceMapper chatSpaceDataModelToChatSpaceMapper,
         MemberInvitationMapper memberInvitationMapper,
         NewMessageMapper newMessageMapper,
+        MessageRepository messageRepository,
         Clock clock) {
         this.chatSpaceUserRepository = chatSpaceUserRepository;
         this.javaxValidator = javaxValidator;
@@ -102,6 +106,7 @@ public class ChatSpaceService {
         this.chatSpaceDataModelToChatSpaceMapper = chatSpaceDataModelToChatSpaceMapper;
         this.memberInvitationMapper = memberInvitationMapper;
         this.newMessageMapper = newMessageMapper;
+        this.messageRepository = messageRepository;
     }
     //==============================================================================================
     public  Optional<ChatSpaceUser> doesUserExist(UUID userUuid) throws DataAccessException {
@@ -289,6 +294,9 @@ public class ChatSpaceService {
                             .uuid(UUID.randomUUID())
                             .createdTimestamp(this.clock.instant())
                             .build();
+
+        //issue with mysql. need to save first for mysql, works fine with h2.
+        message = this.messageRepository.save(message);
         messages.add(message);
         return messageAddedSuccessfully(message);
     }

@@ -15,6 +15,7 @@ import com.shohidulhaque.chat_service.mapper.MemberInvitationMapper;
 import com.shohidulhaque.chat_service.mapper.NewMessageMapper;
 import com.shohidulhaque.chat_service.repository.ChatSpaceRepository;
 import com.shohidulhaque.chat_service.repository.ChatSpaceUserRepository;
+import com.shohidulhaque.chat_service.repository.MessageRepository;
 import com.shohidulhaque.chat_service.repository.UserInvitationRepository;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceDtoResponse;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceInvitation;
@@ -35,6 +36,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
+import liquibase.pro.packaged.M;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -93,6 +95,9 @@ public class ChatSpaceServiceTest {
 
     ChatSpaceService testObject;
 
+    @Autowired
+    MessageRepository messageRepository;
+
     @SpyBean
     UserInvitationRepository userInvitationRepository;
 
@@ -127,6 +132,7 @@ public class ChatSpaceServiceTest {
             this.chatSpaceDataModelToChatSpaceMapper,
             this.memberInvitationMapper,
             this.newMessageMapper,
+            this.messageRepository,
             Clock.fixed(Instant.now(), ZoneId.of("UTC")));
     }
 
