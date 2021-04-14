@@ -12,16 +12,19 @@ import com.shohidulhaque.chat_service.mapper.ChapSpaceInvitationMapper;
 import com.shohidulhaque.chat_service.mapper.ChatSpaceDataModelToChatSpaceMapper;
 import com.shohidulhaque.chat_service.mapper.ChatSpaceUserMapper;
 import com.shohidulhaque.chat_service.mapper.MemberInvitationMapper;
+import com.shohidulhaque.chat_service.mapper.NewMessageMapper;
 import com.shohidulhaque.chat_service.repository.ChatSpaceRepository;
 import com.shohidulhaque.chat_service.repository.ChatSpaceUserRepository;
 import com.shohidulhaque.chat_service.repository.UserInvitationRepository;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceDtoResponse;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceInvitation;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceInvitationDtoRequest;
+import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceMessageRequestDto;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ContentChatSpaceErrorResponse;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.CreateChatSpaceDtoRequest;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.CreateChatSpaceUserDtoRequest;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.MemberAcceptance;
+import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.NewMessage;
 import com.shohidulhaque.my_people.common_model.sucess_and_error_codes.error_codes.ErrorCode.ErrorType;
 import java.io.IOException;
 import java.time.Clock;
@@ -59,8 +62,11 @@ public class ChatSpaceServiceTest {
     final static UUID UuidOfChatSpaceCreatedByAExistingChatSpaceCreator = UUID.fromString("6ae2995b-7c8e-41d0-95af-a76fb27834f3");
     final static UUID UuidOfInvitedPerson = UUID.fromString("555593c2-d736-42ce-9926-ec944b02cbcc");
     final static UUID UuidOfExistingInvitationForInvitedPerson = UUID.fromString("85f02cec-14e1-4fc8-8f64-f790fa8452bc");
+    final static UUID UuidOfChatSpaceMember = UUID.fromString("555593c2-d736-42ce-9926-ec944b02cbcc");
 
     final static UUID UuidOfNonExistingSpaceCreator = UUID.fromString("d49a93ba-8605-4450-b507-a16221f8d6d5");
+
+
 
     ObjectMapper  objectMapper;
 
@@ -71,6 +77,8 @@ public class ChatSpaceServiceTest {
     ChatSpaceDataModelToChatSpaceMapper chatSpaceDataModelToChatSpaceMapper;
 
     MemberInvitationMapper memberInvitationMapper;
+
+    NewMessageMapper newMessageMapper;
 
     Clock clock;
 
@@ -107,6 +115,7 @@ public class ChatSpaceServiceTest {
         this.chatSpaceUserMapper = ChatSpaceUserMapper.INSTANCE;
         this.chatSpaceInvitationMapper = ChapSpaceInvitationMapper.INSTANCE;
         this.memberInvitationMapper = MemberInvitationMapper.INSTANCE;
+        this.newMessageMapper = NewMessageMapper.INSTANCE;
         this.testObject = new ChatSpaceService(
             this.chatSpaceUserRepository,
             this.chatSpaceRepository,
@@ -117,6 +126,7 @@ public class ChatSpaceServiceTest {
             this.chatSpaceUserMapper,
             this.chatSpaceDataModelToChatSpaceMapper,
             this.memberInvitationMapper,
+            this.newMessageMapper,
             Clock.fixed(Instant.now(), ZoneId.of("UTC")));
     }
 
@@ -239,6 +249,32 @@ public class ChatSpaceServiceTest {
         Assertions.assertThat(chatSpaceInvitation.getMemberUuid()).isEqualTo(UuidOfInvitedPerson);
         Assertions.assertThat(chatSpaceInvitation.getChatSpaceUuid()).isEqualTo(UuidOfChatSpaceCreatedByAExistingChatSpaceCreator);
         Assertions.assertThat(chatSpaceInvitation.getUuid()).isNotNull();
+    }
+
+    @Test
+    public void givenAnExistingChatSpace_whenAMemberAddsANewMessage_thenThemMessageIsAddedSuccessfully() throws Exception {
+
+        final String MESSAGE = "THIS IS THE NEW MESSAGE";
+
+        ChatSpaceMessageRequestDto chatSpaceMessageRequestDto = ChatSpaceMessageRequestDto
+            .builder()
+            .uuidOfMember(UuidOfChatSpaceMember)
+            .message(MESSAGE)
+            .build();
+
+        ChatSpaceDtoResponse chatSpaceDtoResponse = this.testObject.addMessage(
+            UuidOfExistingChatSpaceCreator,
+            UuidOfChatSpaceCreatedByAExistingChatSpaceCreator,
+            chatSpaceMessageRequestDto);
+
+        Assertions.assertThat(chatSpaceDtoResponse.getContent().getResponseType().getCode()).isEqualTo(HttpStatus.CREATED.value());
+        Assertions.assertThat(chatSpaceDtoResponse.getContent().getError()).hasSize(0);
+        Assertions.assertThat(chatSpaceDtoResponse.getContent().getSuccess()).hasSize(1);
+        Object payload = chatSpaceDtoResponse.getContent().getSuccess()[0].getPayload();
+        String responseAsJson = this.objectMapper.writeValueAsString(payload);
+        NewMessage newMessage = this.objectMapper.readValue(responseAsJson, NewMessage.class);
+        Assertions.assertThat(newMessage.getUuid()).isNotNull();
+        Assertions.assertThat(newMessage.getCreatedTimestamp()).isNotNull();
     }
 
     //TODO: impplement

@@ -3,12 +3,14 @@ package com.shohidulhaque.chat_service.service;
 import com.shohidulhaque.chat_service.data_model.ChatSpace;
 import com.shohidulhaque.chat_service.data_model.ChatSpaceUser;
 import com.shohidulhaque.chat_service.data_model.Member;
+import com.shohidulhaque.chat_service.data_model.Message;
 import com.shohidulhaque.chat_service.data_model.UserInvitation;
 import com.shohidulhaque.chat_service.data_transfer_object.validation.ChatSpaceDtoArgumentViolationResponse;
 import com.shohidulhaque.chat_service.mapper.ChapSpaceInvitationMapper;
 import com.shohidulhaque.chat_service.mapper.ChatSpaceDataModelToChatSpaceMapper;
 import com.shohidulhaque.chat_service.mapper.ChatSpaceUserMapper;
 import com.shohidulhaque.chat_service.mapper.MemberInvitationMapper;
+import com.shohidulhaque.chat_service.mapper.NewMessageMapper;
 import com.shohidulhaque.chat_service.repository.ChatSpaceRepository;
 import com.shohidulhaque.chat_service.repository.ChatSpaceUserRepository;
 import com.shohidulhaque.chat_service.repository.UserInvitationRepository;
@@ -16,10 +18,12 @@ import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_servic
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceDtoResponse;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceInvitation;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceInvitationDtoRequest;
+import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceMessageRequestDto;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ContentChatSpaceSuccessResponse;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.CreateChatSpaceDtoRequest;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.CreateChatSpaceUserDtoRequest;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.MemberAcceptance;
+import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.NewMessage;
 import com.shohidulhaque.my_people.common_model.sucess_and_error_codes.error_codes.ErrorCode.ErrorType;
 import com.shohidulhaque.my_people.common_model.sucess_and_error_codes.success_codes.SuccessCode.SuccessType;
 import com.shohidulhaque.my_people.common_model.user_security_information.ResponseType;
@@ -72,6 +76,8 @@ public class ChatSpaceService {
     //==============================================================================================
     MemberInvitationMapper memberInvitationMapper;
     //==============================================================================================
+    NewMessageMapper newMessageMapper;
+    //==============================================================================================
     @Autowired
     public ChatSpaceService(
         ChatSpaceUserRepository chatSpaceUserRepository,
@@ -83,6 +89,7 @@ public class ChatSpaceService {
         ChatSpaceUserMapper chatSpaceUserMapper,
         ChatSpaceDataModelToChatSpaceMapper chatSpaceDataModelToChatSpaceMapper,
         MemberInvitationMapper memberInvitationMapper,
+        NewMessageMapper newMessageMapper,
         Clock clock) {
         this.chatSpaceUserRepository = chatSpaceUserRepository;
         this.javaxValidator = javaxValidator;
@@ -94,6 +101,7 @@ public class ChatSpaceService {
         this.chatSpaceUserMapper = chatSpaceUserMapper;
         this.chatSpaceDataModelToChatSpaceMapper = chatSpaceDataModelToChatSpaceMapper;
         this.memberInvitationMapper = memberInvitationMapper;
+        this.newMessageMapper = newMessageMapper;
     }
     //==============================================================================================
     public  Optional<ChatSpaceUser> doesUserExist(UUID userUuid) throws DataAccessException {
@@ -259,6 +267,40 @@ public class ChatSpaceService {
         ChatSpaceDtoResponse chatSpaceDtoResponse = ChatSpaceDtoResponse.SuccessChatSpaceDtoResponse(responseType, List.of(contentChatSpaceSuccessResponse));
         return chatSpaceDtoResponse;
     }
+    //==============================================================================================
+    public ChatSpaceDtoResponse addMessage(UUID chatSpaceCreator, UUID chatSpaceUuid, ChatSpaceMessageRequestDto chatSpaceMessageRequestDto){
+        Set<ConstraintViolation<ChatSpaceDtoRequest>> violations = this.javaxValidator.validate(
+            chatSpaceMessageRequestDto);
+        if (!violations.isEmpty()) {
+            return ChatSpaceDtoArgumentViolationResponse.BadArgumentException(
+                chatSpaceMessageRequestDto, violations,  ErrorType.generalChatSpaceError);
+        }
+        Optional<ChatSpace> chatSpaceOptional = this.chatSpaceRepository.findChatSpace(
+            chatSpaceCreator, chatSpaceUuid, chatSpaceMessageRequestDto.getUuidOfMember());
+        if(chatSpaceOptional.isEmpty()){
+            return ChatSpaceDtoArgumentViolationResponse.BadArgumentException(
+                chatSpaceMessageRequestDto, violations,  ErrorType.generalChatSpaceError);
+        }
+        ChatSpace chatSpace = chatSpaceOptional.get();
+        Set<Message> messages = chatSpace.getMessages();
+        Message message = Message.builder()
+                            .message(chatSpaceMessageRequestDto.getMessage())
+                            .fromUuid(chatSpaceMessageRequestDto.getUuidOfMember())
+                            .uuid(UUID.randomUUID())
+                            .createdTimestamp(this.clock.instant())
+                            .build();
+        messages.add(message);
+        return messageAddedSuccessfully(message);
+    }
+
+    private ChatSpaceDtoResponse messageAddedSuccessfully(Message message) {
+        NewMessage newMessage = this.newMessageMapper.to(message);
+        ContentChatSpaceSuccessResponse contentChatSpaceSuccessResponse = new ContentChatSpaceSuccessResponse(SuccessType.userChatSpace, newMessage);
+        ResponseType responseType = ResponseType.GetCreatedResponseType();
+        ChatSpaceDtoResponse chatSpaceDtoResponse = ChatSpaceDtoResponse.SuccessChatSpaceDtoResponse(responseType, List.of(contentChatSpaceSuccessResponse));
+        return chatSpaceDtoResponse;
+    }
+
     //==============================================================================================
     //TODO: implement
     public boolean rejectInvitation(UUID chatSpaceUserUuid, UUID inviteeUuid, UUID uuidOfExistingInvitation){

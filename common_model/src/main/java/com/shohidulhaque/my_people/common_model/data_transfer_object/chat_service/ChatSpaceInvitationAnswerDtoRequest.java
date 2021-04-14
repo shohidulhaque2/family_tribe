@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @EqualsAndHashCode
+@ToString
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class ChatSpaceInvitationAnswerDtoRequest extends ChatSpaceDtoRequest{
     boolean isInvitationAccepted;
     String invitationId;

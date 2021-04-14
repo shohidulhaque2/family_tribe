@@ -5,6 +5,7 @@ import com.shohidulhaque.chat_service.mapper.ChatSpaceDataModelToChatSpaceMapper
 import com.shohidulhaque.chat_service.repository.ChatSpaceUserRepository;
 import com.shohidulhaque.chat_service.service.ChatSpaceService;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceDtoResponse;
+import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.ChatSpaceMessageRequestDto;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.CreateChatSpaceDtoRequest;
 import com.shohidulhaque.my_people.common_model.data_transfer_object.chat_service.CreateChatSpaceUserDtoRequest;
 import com.shohidulhaque.my_people.common_model.sucess_and_error_codes.Undefined;
@@ -122,6 +123,23 @@ public class UserChatSpaceEndPoints {
             .linkTo(WebMvcLinkBuilder
                 .methodOn(UserChatSpaceEndPoints.class)
                 .getChatSpaceUser(userUuid))
+            .withSelfRel());
+        return ResponseEntity
+            .status(chatSpaceDtoResponse.getContent().getResponseType().getCode())
+            .body(chatSpaceDtoResponse);
+    }
+    //==============================================================================================
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/users/{chatSpaceUserUuid}/chatspaces/{chatSpaceUuid}")
+    public ResponseEntity<ChatSpaceDtoResponse> addMessage(
+        @PathVariable("chatSpaceUserUuid") UUID chatSpaceUserUuid,
+        @PathVariable("chatSpaceUuid") UUID chatSpaceUuid,
+        @RequestBody ChatSpaceMessageRequestDto chatSpaceMessageRequestDto) {
+        ChatSpaceDtoResponse chatSpaceDtoResponse = this.chatSpaceService.addMessage(chatSpaceUserUuid, chatSpaceUuid, chatSpaceMessageRequestDto);
+        chatSpaceDtoResponse.add(WebMvcLinkBuilder
+            .linkTo(WebMvcLinkBuilder
+                .methodOn(UserChatSpaceEndPoints.class)
+                .addMessage(chatSpaceUserUuid, chatSpaceUuid, chatSpaceMessageRequestDto))
             .withSelfRel());
         return ResponseEntity
             .status(chatSpaceDtoResponse.getContent().getResponseType().getCode())
